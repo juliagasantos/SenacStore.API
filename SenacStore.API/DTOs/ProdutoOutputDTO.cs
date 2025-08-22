@@ -2,7 +2,7 @@
 
 namespace SenacStore.API.DTOs
 {
-    public class ProdutoDTO
+    public class ProdutoOutputDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }

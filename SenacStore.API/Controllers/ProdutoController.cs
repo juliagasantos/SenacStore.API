@@ -24,7 +24,7 @@ namespace SenacStore.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var produtos = await _produtoRepository.GetAllAsync();
-            var produtosDTO = produtos.Select(produto => new ProdutoDTO
+            var produtosDTO = produtos.Select(produto => new ProdutoOutputDTO
             {
                 Id = produto.Id,
                 Nome = produto.Nome,
@@ -45,27 +45,33 @@ namespace SenacStore.API.Controllers
         {
             var produto = await _produtoRepository.GetByIdAsync(id);
 
-            var produtoDTO = new ProdutoDTO
+            if (produto == null)
             {
-                Id = produto.Id,
-                Nome = produto.Nome,
-                Descricao = produto.Descricao,
-                Preco = produto.Preco,
-                Categoria = produto.Categoria,
-                Imagem = produto.Imagem,
-                Nota = produto.Nota,
-                EhLancamento = produto.EhLancamento
-            };
-            return Ok(produtoDTO);
+                return NotFound($"Produto com ID {id} não encontrado.");
+            }
+            else
+            {
+                var produtoDTO = new ProdutoOutputDTO
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Preco = produto.Preco,
+                    Categoria = produto.Categoria,
+                    Imagem = produto.Imagem,
+                    Nota = produto.Nota,
+                    EhLancamento = produto.EhLancamento
+                };
+                return Ok(produtoDTO);
+            }
         }
 
-        // PUT api/<ProdutoController>/5
+        //create
         [HttpPost]
-        public async Task<IActionResult> Create(ProdutoDTO produtoDTO)
+        public async Task<IActionResult> Create(ProdutoInputDTO produtoDTO)
         {
             var produto = new Produto
             {
-                Id = produtoDTO.Id,
                 Nome = produtoDTO.Nome,
                 Descricao = produtoDTO.Descricao,
                 Preco = produtoDTO.Preco,
@@ -76,11 +82,11 @@ namespace SenacStore.API.Controllers
 
             };
             await _produtoRepository.CreateProdutoAsync(produto);
-            //return CreatedAtAction(nameof(GetByIdAsync), new { id = produto.Id }, produto);
-            return Ok();
+            //return CreatedAtAction(nameof(GetByIdAsync), new { nome = produtoDTO.Nome }, produtoDTO);
+            return Ok("Produto criado com sucesso!");
         }
 
-        // DELETE api/<ProdutoController>/5
+        //Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -91,7 +97,7 @@ namespace SenacStore.API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody] ProdutoDTO produtoDTO)
+        public async Task<IActionResult> Put([FromBody] ProdutoOutputDTO produtoDTO)
         {
             var produto = new Produto
             {
