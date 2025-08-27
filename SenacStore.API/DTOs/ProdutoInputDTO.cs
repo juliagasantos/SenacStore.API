@@ -24,6 +24,6 @@ namespace SenacStore.API.DTOs
         [Required(ErrorMessage = "O preço do produto é obrigatório.")]
         public decimal Preco { get; set; }
 
-        public string Categoria { get; set; }
+        public int CategoriaId { get; set; }
     }
 }

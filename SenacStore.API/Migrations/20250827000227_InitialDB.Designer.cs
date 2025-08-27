@@ -11,7 +11,7 @@ using SenacStore.API.Data;
 namespace SenacStore.API.Migrations
 {
     [DbContext(typeof(SenacStoreDbContext))]
-    [Migration("20250819225434_InitialDB")]
+    [Migration("20250827000227_InitialDB")]
     partial class InitialDB
     {
         /// <inheritdoc />
@@ -24,6 +24,24 @@ namespace SenacStore.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SenacStore.API.Models.Categoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categoria");
+                });
+
             modelBuilder.Entity("SenacStore.API.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -32,24 +50,26 @@ namespace SenacStore.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Categoria")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("EhLancamento")
                         .HasColumnType("bit");
 
                     b.Property<string>("Imagem")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Nota")
                         .HasColumnType("int");
@@ -59,7 +79,20 @@ namespace SenacStore.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoriaId");
+
                     b.ToTable("Produto");
+                });
+
+            modelBuilder.Entity("SenacStore.API.Models.Produto", b =>
+                {
+                    b.HasOne("SenacStore.API.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
                 });
 #pragma warning restore 612, 618
         }

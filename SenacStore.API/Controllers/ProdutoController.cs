@@ -30,7 +30,7 @@ namespace SenacStore.API.Controllers
                 Nome = produto.Nome,
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
-                Categoria = produto.Categoria,
+                Categoria = produto.Categoria.Nome,
                 Imagem = produto.Imagem,
                 Nota = produto.Nota,
                 EhLancamento = produto.EhLancamento
@@ -57,7 +57,7 @@ namespace SenacStore.API.Controllers
                     Nome = produto.Nome,
                     Descricao = produto.Descricao,
                     Preco = produto.Preco,
-                    Categoria = produto.Categoria,
+                    Categoria = produto.Categoria.Nome,
                     Imagem = produto.Imagem,
                     Nota = produto.Nota,
                     EhLancamento = produto.EhLancamento
@@ -75,7 +75,7 @@ namespace SenacStore.API.Controllers
                 Nome = produtoDTO.Nome,
                 Descricao = produtoDTO.Descricao,
                 Preco = produtoDTO.Preco,
-                Categoria = produtoDTO.Categoria,
+                CategoriaId = produtoDTO.CategoriaId,
                 Imagem = produtoDTO.Imagem,
                 Nota = produtoDTO.Nota,
                 EhLancamento = produtoDTO.EhLancamento
@@ -105,7 +105,7 @@ namespace SenacStore.API.Controllers
                 Nome = produtoDTO.Nome,
                 Descricao = produtoDTO.Descricao,
                 Preco = produtoDTO.Preco,
-                Categoria = produtoDTO.Categoria,
+                CategoriaId = produtoDTO.CategoriaId,
                 Imagem = produtoDTO.Imagem,
                 Nota = produtoDTO.Nota,
                 EhLancamento = produtoDTO.EhLancamento
