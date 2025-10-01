@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ï»¿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -24,11 +24,11 @@ builder.Services.AddAuthentication
             // defina o segredo da chave
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
 
-            // defina o nome do emisor e do público
+            // defina o nome do emisor e do pÃºblico
             ValidIssuer = "*",
             ValidAudience = "*",
 
-            // valida as exigências do token
+            // valida as exigÃªncias do token
             RequireExpirationTime = true,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
@@ -42,16 +42,26 @@ builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICadastroRepository, CadastroRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
+
+//configuraï¿½ï¿½o do CORS
+//nï¿½o esquecer de colocar enbableCors as controllers
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+}));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-//configuração para colocar token no Swagger
+//configuraÃ§Ã£o para colocar token no Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ACME", Version = "v1" });
 
-    // Adiciona a configuração de segurança para o Swagger
+    // Adiciona a configuraÃ§Ã£o de seguranÃ§a para o Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Insira o JWT no formato: Bearer {seu_token}",
@@ -84,6 +94,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseAuthorization();
 

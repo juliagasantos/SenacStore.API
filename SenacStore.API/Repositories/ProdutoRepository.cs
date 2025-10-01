@@ -22,12 +22,17 @@ namespace SenacStore.API.Repositories
 
         public async Task DeleteProdutoAsync(int id)
         {
-           var produto = await _senacStoreDbContext.Produtos.FindAsync(id);
-            if(produto != null)
+            var produto = await _senacStoreDbContext.Produtos.FindAsync(id);
+            if (produto != null)
             {
                 _senacStoreDbContext.Produtos.Remove(produto);
                 await _senacStoreDbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<Produto>> GetByCategoryAsync(int categoryId)
+        {
+            return await _senacStoreDbContext.Produtos.Where(c => c.CategoriaId == categoryId).ToListAsync();
         }
 
         public async Task<List<Produto>> GetAllAsync()
@@ -37,7 +42,7 @@ namespace SenacStore.API.Repositories
 
         public async Task<Produto> GetByIdAsync(int id)
         {
-           return await _senacStoreDbContext.Produtos.Include(p => p.Categoria).FirstOrDefaultAsync(p => p.Id == id);
+            return await _senacStoreDbContext.Produtos.Include(p => p.Categoria).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task UpdateProdutoAsync(Produto produto)

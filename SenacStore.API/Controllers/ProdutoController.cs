@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SenacStore.API.DTOs;
@@ -10,8 +11,8 @@ using SenacStore.API.Models;
 namespace SenacStore.API.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("MyPolicy")]
     [ApiController]
-    [Authorize]
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -70,6 +71,7 @@ namespace SenacStore.API.Controllers
 
         //create
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(ProdutoInputDTO produtoDTO)
         {
             var produto = new Produto
@@ -90,6 +92,7 @@ namespace SenacStore.API.Controllers
 
         //Delete
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             await _produtoRepository.DeleteProdutoAsync(id);
@@ -99,6 +102,7 @@ namespace SenacStore.API.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put([FromBody] ProdutoOutputDTO produtoDTO)
         {
             var produto = new Produto
@@ -115,6 +119,35 @@ namespace SenacStore.API.Controllers
             };
             await _produtoRepository.UpdateProdutoAsync(produto);
             return Ok();
+        }
+
+       
+        
+        
+        [HttpGet("api/by-category/{idCategoria}")]
+        public async Task<IActionResult> GetByCategory(int idCategoria)
+        {
+            var produtos = await _produtoRepository.GetByCategoryAsync(idCategoria);
+
+            var resultado = new List<ProdutoOutputDTO>();
+
+            foreach (var produto in produtos)
+            {
+                resultado.Add(new ProdutoOutputDTO
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Imagem = produto.Imagem,
+                    Preco = produto.Preco,
+                    EhLancamento = produto.EhLancamento,
+                    Nota = produto.Nota,
+                    CategoriaId = produto.CategoriaId
+                });
+            }
+
+
+            return Ok(resultado);
         }
     }
 }
